@@ -1,47 +1,49 @@
 # localpilot
+
 _Use GitHub Copilot locally on your Macbook with one-click!_
 
 ![image](https://github.com/danielgross/localpilot/assets/279531/521d0613-7423-4839-a5e8-42098cd65a5e)
 
 ## Demo Video
 
-
 https://github.com/danielgross/localpilot/assets/279531/3259981b-39f7-4bfa-8a45-84bde6d4ba4c
-
-
 
 _This video is not sped up or slowed down._
 
-## Installation 
-1. First, open VS Code Settings and add the following to your settings.json file: 
+## Installation
+
+1. First, open VS Code Settings and add the following to your settings.json file:
+
 ```json
 "github.copilot.advanced": {
-    "debug.testOverrideProxyUrl": "http://localhost:5001",
-    "debug.overrideProxyUrl": "http://localhost:5001"
+    "debug.testOverrideProxyUrl": "http://localhost:1730",
+    "debug.overrideProxyUrl": "http://localhost:1730"
 }
 ```
 
-2. Create a virtualenv to run this Python process, install the requirements, and download the models. 
+2. Create a virtualenv to run this Python process, install the requirements, and download the models.
+
 ```python
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 # First setup run. This will download several models to your ~/models folder.
-python app.py --setup 
-``` 
+python app.py --setup
+```
 
-3. Run it! 
+3. Run it!
+
 ```python
 python app.py
 ```
 
-Enjoy your on-device Copilot! 
+Enjoy your on-device Copilot!
 
 ## Caveat FAQ
 
-**Is the code as good as GitHub Copilot?** 
+**Is the code as good as GitHub Copilot?**
 
-For simple line completions yes. For simple function completions, mostly. For complex functions... maybe. 
+For simple line completions yes. For simple function completions, mostly. For complex functions... maybe.
 
 **Is it as fast as GitHub Copilot?**
 
@@ -55,8 +57,6 @@ Yes!, I'm sure it can be, I just haven't had the time. Please do submit a pull r
 
 Hmm, that seems like an interesting idea.
 
-**OK, but in summary, is it good?** 
+**OK, but in summary, is it good?**
 
 Only if your network is bad. I don't think it's competitive if you have fast Internet. But it sure is awesome on airplanes and while tethering!
-
-

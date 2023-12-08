@@ -12,7 +12,6 @@ state = config.models[config.models['default']]
 local_server_process = None
 logging.basicConfig(level=logging.DEBUG)
 
-
 def start_local_server(model_filename):
     global local_server_process
     if local_server_process:
@@ -22,7 +21,9 @@ def start_local_server(model_filename):
            "--n_gpu_layers", "1", "--n_ctx", "4096"]  # TODO: set this more correctly
     logging.debug('Running: %s' % ' '.join(cmd))
     local_server_process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        cmd
+        # , stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
 
 
 @app.route('/set_target', methods=['POST'])
@@ -34,10 +35,24 @@ async def set_target(request: Request):
         raise exceptions.HTTPException(
             status_code=400, detail=f'Invalid target: {target}')
 
-    state = config.models[target]
-    if config.models[target].get("type") == "local":
-        start_local_server(os.path.join(
-            config.model_folder, config.models[target]['filename']))
+    model_info = config.models[target]
+    state = model_info
+
+    if model_info.get("type") == "local":
+        # Extract the parts from the URL
+        url_parts = model_info['url'].split('/')
+        # The structure is models/TheBloke/CodeLlama-34B-Instruct-GGUF/codellama-34b-instruct.Q4_K_M.gguf
+        # So we take the relevant parts from the URL to form the path
+        owner = url_parts[3]
+        repo_name = url_parts[4]
+        model_filename = url_parts[-1]
+
+        # Construct the nested folder path
+        nested_folder_path = os.path.join(config.model_folder, owner, repo_name)
+        model_path = os.path.join(nested_folder_path, model_filename)
+
+        # Start the local server with the model
+        start_local_server(model_path)
 
     message = f'Target set to {state}'
     return responses.JSONResponse({'message': message}, status_code=200)
@@ -86,4 +101,4 @@ async def server_error(request, exc):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5001)
+    uvicorn.run(app, host="0.0.0.0", port=1730)
